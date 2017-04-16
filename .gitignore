@@ -87,3 +87,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+
+# Additional config not include in GitHub python default
+.DS_Store
+districts/data/*
+
+
