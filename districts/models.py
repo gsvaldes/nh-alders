@@ -12,6 +12,9 @@ class AlderDistrict(models.Model):
 
     mpoly = models.MultiPolygonField()
 
+    class Meta:
+        ordering = ('wards',)
+
     def __str__(self):
         return self.wards_desc
 
