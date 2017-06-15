@@ -36,9 +36,9 @@
             </div>
             <div class="col-md-4">
                 <h1>Hello Content</h1>
-                <h2>{{alder}}</h2>
+                <h2>{{properties.alder}}</h2>
             </div>
-        </div>alder
+        </div>
     </div>
     {% endverbatim %}
 
@@ -48,11 +48,22 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            alder: "My favorite alder"
+            alder: "My favorite alder",
+            e: null,
+            feature: '',
+            properties: ''
         },
         mounted: function(){
             this.addMap();
             this.addDistricts();
+        },
+        watch: {
+            e: function(){
+                console.log(this.e);
+            },
+            feature: function(){
+                this.properties = this.feature.properties;
+            }
         },
         methods: {
             addMap: function(){
@@ -76,7 +87,12 @@
                     }); 
             },
             onEachFeature: function(feature, layer){
+                var vm = this;
                 layer.bindPopup(feature.properties.wards_desc + "<br/>" + feature.properties.alder);
+                layer.on('click', function(e){
+                    vm.e = e;
+                    vm.feature = feature;
+                });
             }
         }
     });
