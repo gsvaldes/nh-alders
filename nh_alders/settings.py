@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_gis',
     'districts.apps.DistrictsConfig',
+    'crm.apps.CrmConfig',
 ]
 
 MIDDLEWARE = [
