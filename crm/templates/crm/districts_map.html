@@ -37,6 +37,7 @@
             <div class="col-md-4">
                 <h1>Hello Content</h1>
                 <h2>{{properties.alder}}</h2>
+                <div>{{properties.wards_desc}} <span v-show="properties">ward</span></div>
             </div>
         </div>
     </div>
@@ -51,7 +52,10 @@
             alder: "My favorite alder",
             e: null,
             feature: '',
-            properties: ''
+            properties: '',
+            map: null,
+            geojsonLayer: null,
+            wards_txt_arr: []
         },
         mounted: function(){
             this.addMap();
@@ -60,6 +64,8 @@
         watch: {
             e: function(){
                 console.log(this.e);
+                this.resetStyle();
+                this.highlight();
             },
             feature: function(){
                 this.properties = this.feature.properties;
@@ -78,9 +84,15 @@
                 axios.get('/districts/districts/')
                     .then(function (response) {
                         console.log(response.data);
-                        L.geoJSON(response.data, {
+                        console.log(L.geoJSON(response.data, {
                             onEachFeature: vm.onEachFeature
-                        }).addTo(vm.map);
+                        }));
+                        vm.geojsonLayer = L.geoJSON(response.data, {
+                            onEachFeature: vm.onEachFeature
+                        })
+                        .addTo(vm.map);
+                        console.log('success');
+                        console.log(vm.geojsonLayer);
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -88,11 +100,37 @@
             },
             onEachFeature: function(feature, layer){
                 var vm = this;
-                layer.bindPopup(feature.properties.wards_desc + "<br/>" + feature.properties.alder);
+                layer._leaflet_id = feature.properties.wards_txt;
+                this.wards_txt_arr.push(feature.properties.wards_txt);
+                console.log('feature.id' + feature.properties.wards_txt)
+                layer.setStyle({
+                        'color': 'blue'
+                });
+                // layer.bindPopup(feature.properties.wards_desc + "<br/>" + feature.properties.alder);
                 layer.on('click', function(e){
                     vm.e = e;
                     vm.feature = feature;
+                    
                 });
+            },
+            highlight: function (){
+                console.log('highlight');
+                console.log(this.geojsonLayer);
+                this.e.target
+                .setStyle({
+                    'color': 'red'
+                })
+                .addTo(this.map);
+            },
+            resetStyle(){
+                var vm = this;
+                this.wards_txt_arr.forEach(function(ward){
+                    vm.geojsonLayer.getLayer(ward)
+                    .setStyle({
+                        'color': 'blue'
+                    })
+                    .addTo(vm.map)
+                })
             }
         }
     });
