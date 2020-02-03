@@ -53,7 +53,7 @@ class Person(models.Model):
         )
     email = models.EmailField(max_length=200, verbose_name = "Email Address")
     address = models.ForeignKey('PostalAddress', on_delete=models.PROTECT)
-    ismemberof = models.ManyToManyField('Organization', verbose_name = 'Is member of', blank=True, null=True)
+    # ismemberof = models.ManyToManyField('Organization', verbose_name = 'Is member of', blank=True, null=True)
 
     def __str__(self):
         return '{0}, {1}'.format(self.last_name, self.first_name)
